@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file alias="Game.qml">2048.qml</file>
+    </qresource>
+</RCC>
