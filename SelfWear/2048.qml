@@ -2,10 +2,11 @@ import QtQuick 2.0
 
 Rectangle {
     id: app
-//    width: 450; height: 495
-//    radius: 195
-//    anchors.fill: parent
-//    anchors.fill: oval
+    width: parent.width - (parent.width / 6)
+    height: parent.height - (parent.height / 6)
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: parent.top
+    anchors.topMargin: oval.height / 30
     color: "#888888"
     focus: true
 
