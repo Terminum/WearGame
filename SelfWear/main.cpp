@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine appEngine;
     appEngine.load(QUrl(QLatin1String("qrc:/main.qml")));
 //    QtAndroid::hideSplashScreen(500);
+    QNativeInterface::QAndroidApplication::hideSplashScreen(500);
 
     return app.exec();
 }
