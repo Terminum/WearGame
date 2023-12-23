@@ -6,7 +6,7 @@ Rectangle {
     height: parent.height - (parent.height / 6)
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
-    anchors.topMargin: oval.height / 30
+    anchors.topMargin: parent.height / 30
     color: "#888888"
     focus: true
 
