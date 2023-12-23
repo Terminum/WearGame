@@ -3,9 +3,9 @@ import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 
-
 Item {
     property var pageStack: null
+    property color rectangle_color: "#D2E02E"
     width: parent.width
     height: parent.height
     anchors.fill: parent
@@ -17,13 +17,12 @@ Item {
     }
 
     Rectangle {
+        id: _mainRect
         color: rectangle_color
         anchors.centerIn: parent
         anchors.fill: parent
-//        width: 190
-//        height: 190
-        radius: 60
-        anchors.margins: 25
+        radius: parent.width * 0.9
+        anchors.margins: parent.height * 0.05
 
         ColumnLayout {
             anchors.centerIn: parent
@@ -38,7 +37,7 @@ Item {
                 Text {
                     text: qsTr("20")
                     font.bold: true
-                    font.pixelSize: 46
+                    font.pixelSize: _mainRect.width * 0.25
                     anchors {
                         top: parent.top
                         horizontalCenter: parent.horizontalCenter
@@ -49,7 +48,7 @@ Item {
                 Text {
                     text: qsTr("48")
                     font.bold: true
-                    font.pixelSize: 46
+                    font.pixelSize: _mainRect.width * 0.25
                     anchors {
                         bottom: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -62,7 +61,7 @@ Item {
                 text: qsTr("Играть")
                 contentItem: Text {
                     text: control.text
-                    font: control.font
+                    font.pixelSize: _mainRect.height * 0.06
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -71,8 +70,6 @@ Item {
                 }
 
                 background: Rectangle {
-                    implicitWidth: 80
-                    implicitHeight: 20
                     opacity: enabled ? 1 : 0.3
                     color: "black"
                     border.color: "#313131"
@@ -83,7 +80,7 @@ Item {
                 anchors {
                     bottom: parent.bottom
                     horizontalCenter: parent.horizontalCenter
-                    bottomMargin: 15
+                    bottomMargin: _mainRect.width * 0.1
                 }
 
                 onClicked: {

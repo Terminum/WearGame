@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Controls 2.15
 
 Rectangle {
     id: app
@@ -30,7 +31,7 @@ Rectangle {
                 tmp.splice(i, 1)
             }
         }
-        numbers=tmp
+        numbers = tmp
     }
     function purge() {
         score = 0
@@ -40,31 +41,39 @@ Rectangle {
         }
         tmp = Array()
         numbers = tmp
-        gen2();
-        gen2();
+        gen2()
+        gen2()
     }
     function checkNotStuck() {
         for (var i = 0; i < app.cols; i++) {
             for (var j = 0; j < app.rows; j++) {
                 if (!numberAt(i, j))
                     return true
-                if (numberAt(i+1,j) && numberAt(i,j).number == numberAt(i+1,j).number)
+                if (numberAt(i + 1,
+                             j) && numberAt(i, j).number == numberAt(i + 1,
+                                                                     j).number)
                     return true
-                if (numberAt(i-1,j) && numberAt(i,j).number == numberAt(i-1,j).number)
+                if (numberAt(i - 1,
+                             j) && numberAt(i, j).number == numberAt(i - 1,
+                                                                     j).number)
                     return true
-                if (numberAt(i,j+1) && numberAt(i,j).number == numberAt(i,j+1).number)
+                if (numberAt(i, j + 1) && numberAt(i, j).number == numberAt(
+                            i, j + 1).number)
                     return true
-                if (numberAt(i,j-1) && numberAt(i,j).number == numberAt(i,j-1).number)
+                if (numberAt(i, j - 1) && numberAt(i, j).number == numberAt(
+                            i, j - 1).number)
                     return true
             }
         }
         return false
     }
     function victory() {
-        message.show("You win! TONUS!")
+        _mouseArea.enabled = false
+        message.show("You win!")
     }
     function defeat() {
-        message.show("Better luck next time! OTVAL!")
+        _mouseArea.enabled = false
+        message.show("Better luck next time!")
     }
 
     Component {
@@ -72,19 +81,7 @@ Rectangle {
 
         Rectangle {
             id: colorRect
-            color: number <=    1 ? "transparent" :
-                   number <=    2 ? "#eee4da" :
-                   number <=    4 ? "#ede0c8" :
-                   number <=    8 ? "#f2b179" :
-                   number <=   16 ? "#f59563" :
-                   number <=   32 ? "#f67c5f" :
-                   number <=   64 ? "#f65e3b" :
-                   number <=  128 ? "#edcf72" :
-                   number <=  256 ? "#edcc61" :
-                   number <=  512 ? "#edc850" :
-                   number <= 1024 ? "#edc53f" :
-                   number <= 2048 ? "#edc22e" :
-                                    "#3c3a32"
+            color: number <= 1 ? "transparent" : number <= 2 ? "#eee4da" : number <= 4 ? "#ede0c8" : number <= 8 ? "#f2b179" : number <= 16 ? "#f59563" : number <= 32 ? "#f67c5f" : number <= 64 ? "#f65e3b" : number <= 128 ? "#edcf72" : number <= 256 ? "#edcc61" : number <= 512 ? "#edc850" : number <= 1024 ? "#edc53f" : number <= 2048 ? "#edc22e" : "#3c3a32"
 
             property int col
             property int row
@@ -194,7 +191,7 @@ Rectangle {
             Text {
                 id: scorePanel
                 width: parent.width / 32 * 31
-                height: parent. height / 32 * 31
+                height: parent.height / 32 * 31
                 anchors.centerIn: parent
 
                 font.pixelSize: height * 0.5
@@ -223,7 +220,7 @@ Rectangle {
                     return itemAt(h + v * app.cols)
                 }
                 function getRandom() {
-                    return itemAt(Math.floor((Math.random() * 16)%16))
+                    return itemAt(Math.floor((Math.random() * 16) % 16))
                 }
                 function getRandomFree() {
                     var free = new Array()
@@ -234,7 +231,7 @@ Rectangle {
                             }
                         }
                     }
-                    return free[Math.floor(Math.random()*free.length)]
+                    return free[Math.floor(Math.random() * free.length)]
                 }
                 Rectangle {
                     width: parent.cellWidth
@@ -242,8 +239,8 @@ Rectangle {
                     color: "#AAAAAA"
                     radius: 2
 
-                    property int col : index % app.cols
-                    property int row : index / app.cols
+                    property int col: index % app.cols
+                    property int row: index / app.cols
                 }
             }
         }
@@ -269,12 +266,14 @@ Rectangle {
             Rectangle {
                 anchors.centerIn: parent
                 width: parent.width * 0.66
-                height: parent.height * 0.33
+                height: parent.height * 0.35
                 color: "black"
+                radius: 20
                 Rectangle {
                     anchors.fill: parent
+                    radius: parent.radius
                     width: parent.width - 2
-                    height: parent.height -.2
+                    height: parent.height - .2
                     color: "white"
                     Text {
                         anchors.fill: parent
@@ -282,11 +281,49 @@ Rectangle {
                         font.pixelSize: parent.height * 0.13
                         anchors.centerIn: parent
                         horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
+                        verticalAlignment: Text.AlignTop
+
+                        anchors {
+                            topMargin: parent.height * 0.2
+                        }
+                    }
+
+                    Button {
+                        id: control
+                        text: qsTr("Играть")
+                        contentItem: Text {
+                            text: control.text
+                            color: "white"
+                            font.pixelSize: 7
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            elide: Text.ElideRight
+                        }
+
+                        background: Rectangle {
+                            opacity: enabled ? 1 : 0.3
+                            color: "black"
+                            border.color: "#313131"
+                            border.width: 2
+                            radius: 20
+                        }
+
+                        anchors {
+                            bottom: parent.bottom
+                            horizontalCenter: parent.horizontalCenter
+                            bottomMargin: _mainRect.width * 0.5
+                        }
+
+                        onClicked: {
+                            app.purge()
+                            _mouseArea.enabled = true
+                            message.hide()
+                        }
                     }
                 }
             }
-            Behavior on opacity { 
+            Behavior on opacity {
                 NumberAnimation {
                     duration: 200
                 }
@@ -294,8 +331,8 @@ Rectangle {
         }
     }
 
-
     MouseArea {
+        id: _mouseArea
         anchors.fill: parent
         property int minimumLength: app.width < app.height ? app.width / 5 : app.height / 5
         property int startX
@@ -305,7 +342,8 @@ Rectangle {
             startY = mouse.y
         }
         onReleased: {
-            var length = Math.sqrt(Math.pow(mouse.x - startX, 2) + Math.pow(mouse.y - startY, 2))
+            var length = Math.sqrt(Math.pow(mouse.x - startX,
+                                            2) + Math.pow(mouse.y - startY, 2))
             if (length < minimumLength)
                 return
             var diffX = mouse.x - startX
@@ -318,17 +356,19 @@ Rectangle {
                     app.move(1, 0)
                 else
                     app.move(-1, 0)
+            else if (diffY > 0)
+                app.move(0, 1)
             else
-                if (diffY > 0)
-                    app.move(0, 1)
-                else
-                    app.move(0, -1)
+                app.move(0, -1)
         }
     }
     function gen2() {
         var tmp = numbers
         var cell = cells.getRandomFree()
-        var newNumber = number.createObject(cellGrid,{"col":cell.col,"row":cell.row})
+        var newNumber = number.createObject(cellGrid, {
+                                                "col": cell.col,
+                                                "row": cell.row
+                                            })
         tmp.push(newNumber)
         numbers = tmp
     }
@@ -341,17 +381,17 @@ Rectangle {
                 var filled = 0
                 var canMerge = false
                 for (var i = app.cols - 1; i >= 0; i--) {
-                    if (numberAt(i,j)) {
+                    if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i,j).number == numberAt(app.cols-filled,j).number) {
+                            if (numberAt(i, j).number == numberAt(
+                                        app.cols - filled, j).number) {
                                 canMerge = false
                                 filled--
                             }
-                        }
-                        else {
+                        } else {
                             canMerge = true
                         }
-                        if (numberAt(i,j).move(app.cols-1-filled,j))
+                        if (numberAt(i, j).move(app.cols - 1 - filled, j))
                             somethingMoved = true
                         filled++
                     }
@@ -363,17 +403,17 @@ Rectangle {
                 var filled = 0
                 var canMerge = false
                 for (var i = 0; i < app.cols; i++) {
-                    if (numberAt(i,j)) {
+                    if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i,j).number == numberAt(filled-1,j).number) {
+                            if (numberAt(i, j).number == numberAt(filled - 1,
+                                                                  j).number) {
                                 canMerge = false
                                 filled--
                             }
-                        }
-                        else {
+                        } else {
                             canMerge = true
                         }
-                        if (numberAt(i,j).move(filled,j))
+                        if (numberAt(i, j).move(filled, j))
                             somethingMoved = true
                         filled++
                     }
@@ -385,17 +425,17 @@ Rectangle {
                 var filled = 0
                 var canMerge = false
                 for (var j = app.rows - 1; j >= 0; j--) {
-                    if (numberAt(i,j)) {
+                    if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i,j).number == numberAt(i,app.rows-filled).number) {
+                            if (numberAt(i, j).number == numberAt(
+                                        i, app.rows - filled).number) {
                                 canMerge = false
                                 filled--
                             }
-                        }
-                        else {
+                        } else {
                             canMerge = true
                         }
-                        if (numberAt(i,j).move(i,app.rows-1-filled))
+                        if (numberAt(i, j).move(i, app.rows - 1 - filled))
                             somethingMoved = true
                         filled++
                     }
@@ -407,17 +447,17 @@ Rectangle {
                 var filled = 0
                 var canMerge = false
                 for (var j = 0; j < app.rows; j++) {
-                    if (numberAt(i,j)) {
+                    if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i,j).number == numberAt(i,filled-1).number) {
+                            if (numberAt(i, j).number == numberAt(
+                                        i, filled - 1).number) {
                                 canMerge = false
                                 filled--
                             }
-                        }
-                        else {
+                        } else {
                             canMerge = true
                         }
-                        if (numberAt(i,j).move(i,filled))
+                        if (numberAt(i, j).move(i, filled))
                             somethingMoved = true
                         filled++
                     }
@@ -443,7 +483,8 @@ Rectangle {
             if (event.key == Qt.Key_Down)
                 app.move(0, 1)
         }
-        if ((event.key === Qt.Key_Down) & (message.visible)) { //event.key === Qt.Key_Space
+        if ((event.key === Qt.Key_Down) & (message.visible)) {
+            //event.key === Qt.Key_Space
             app.purge()
             message.hide()
         }
