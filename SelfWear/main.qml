@@ -6,6 +6,7 @@ Window {
     width: 395
     height: 395
     visible: true
+    color: "#000000"
 
     StackView {
             id: pageStack
