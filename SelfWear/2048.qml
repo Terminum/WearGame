@@ -182,11 +182,12 @@ Rectangle {
         Rectangle {
             id: scorePanelRect
             anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height * 0.1
-            width: parent.width
+            width: parent.width * 0.4
             opacity: 0.66
             color: "white"
-            radius: 2
+            radius: 15
             z: 2
             Text {
                 id: scorePanel
@@ -236,8 +237,8 @@ Rectangle {
                 Rectangle {
                     width: parent.cellWidth
                     height: parent.cellHeight
-                    color: "#AAAAAA"
                     radius: 2
+                    color: "#AAAAAA"
 
                     property int col: index % app.cols
                     property int row: index / app.cols
