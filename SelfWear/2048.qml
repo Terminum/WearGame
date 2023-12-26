@@ -19,14 +19,14 @@ Rectangle {
 
     function numberAt(col, row) {
         for (var i = 0; i < numbers.length; i++) {
-            if (numbers[i].col == col && numbers[i].row == row)
+            if (numbers[i].col === col && numbers[i].row === row)
                 return numbers[i]
         }
     }
     function popNumberAt(col, row) {
         var tmp = numbers
         for (var i = 0; i < tmp.length; i++) {
-            if (tmp[i].col == col && tmp[i].row == row) {
+            if (tmp[i].col === col && tmp[i].row === row) {
                 tmp[i].destroy()
                 tmp.splice(i, 1)
             }
@@ -50,23 +50,24 @@ Rectangle {
                 if (!numberAt(i, j))
                     return true
                 if (numberAt(i + 1,
-                             j) && numberAt(i, j).number == numberAt(i + 1,
-                                                                     j).number)
+                             j) && numberAt(i, j).number === numberAt(i + 1,
+                                                                      j).number)
                     return true
                 if (numberAt(i - 1,
-                             j) && numberAt(i, j).number == numberAt(i - 1,
-                                                                     j).number)
+                             j) && numberAt(i, j).number === numberAt(i - 1,
+                                                                      j).number)
                     return true
-                if (numberAt(i, j + 1) && numberAt(i, j).number == numberAt(
+                if (numberAt(i, j + 1) && numberAt(i, j).number === numberAt(
                             i, j + 1).number)
                     return true
-                if (numberAt(i, j - 1) && numberAt(i, j).number == numberAt(
+                if (numberAt(i, j - 1) && numberAt(i, j).number === numberAt(
                             i, j - 1).number)
                     return true
             }
         }
         return false
     }
+
     function victory() {
         _mouseArea.enabled = false
         message.show("You win!")
@@ -95,12 +96,12 @@ Rectangle {
             radius: cells.getAt(col, row).radius
 
             function move(h, v) {
-                if (h == col && v == row)
+                if (h === col && v === row)
                     return false
                 if (app.numberAt(h, v)) {
                     number += app.numberAt(h, v).number
                     app.score += number
-                    if (number == finalValue)
+                    if (number === finalValue)
                         app.victory()
                     app.popNumberAt(h, v)
                 }
@@ -217,14 +218,15 @@ Rectangle {
             Repeater {
                 id: cells
                 model: app.cols * app.rows
+
                 function getAt(h, v) {
                     return itemAt(h + v * app.cols)
                 }
                 function getRandom() {
-                    return itemAt(Math.floor((Math.random() * 16) % 16))
+                    return itemAt(Math.floor((Math.random() * model) % model))
                 }
                 function getRandomFree() {
-                    var free = new Array()
+                    var free = new Array(0)
                     for (var i = 0; i < app.cols; i++) {
                         for (var j = 0; j < app.rows; j++) {
                             if (!numberAt(i, j)) {
@@ -234,6 +236,7 @@ Rectangle {
                     }
                     return free[Math.floor(Math.random() * free.length)]
                 }
+
                 Rectangle {
                     width: parent.cellWidth
                     height: parent.cellHeight
@@ -349,7 +352,7 @@ Rectangle {
                 return
             var diffX = mouse.x - startX
             var diffY = mouse.y - startY
-            // not sure what the exact angle is but it feels good
+
             if (Math.abs(Math.abs(diffX) - Math.abs(diffY)) < minimumLength / 2)
                 return
             if (Math.abs(diffX) > Math.abs(diffY))
@@ -373,7 +376,6 @@ Rectangle {
         tmp.push(newNumber)
         numbers = tmp
     }
-    // oh  my, this HAS TO be rewritten
     function move(col, row) {
         var somethingMoved = false
         var tmp = numbers
@@ -384,7 +386,7 @@ Rectangle {
                 for (var i = app.cols - 1; i >= 0; i--) {
                     if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i, j).number == numberAt(
+                            if (numberAt(i, j).number === numberAt(
                                         app.cols - filled, j).number) {
                                 canMerge = false
                                 filled--
@@ -398,18 +400,17 @@ Rectangle {
                     }
                 }
             }
-        }
-        if (col < 0) {
-            for (var j = 0; j < app.rows; j++) {
-                var filled = 0
-                var canMerge = false
-                for (var i = 0; i < app.cols; i++) {
+        } else if (col < 0) {
+            for (j = 0; j < app.rows; j++) {
+                filled = 0
+                canMerge = false
+                for (i = 0; i < app.cols; i++) {
                     if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i, j).number == numberAt(filled - 1,
-                                                                  j).number) {
+                            if (numberAt(i, j).number === numberAt(filled - 1,
+                                                                   j).number) {
                                 canMerge = false
-                                filled--
+                                filledVar--
                             }
                         } else {
                             canMerge = true
@@ -420,15 +421,14 @@ Rectangle {
                     }
                 }
             }
-        }
-        if (row > 0) {
-            for (var i = 0; i < app.cols; i++) {
-                var filled = 0
-                var canMerge = false
-                for (var j = app.rows - 1; j >= 0; j--) {
+        } else if (row > 0) {
+            for (i = 0; i < app.cols; i++) {
+                filled = 0
+                canMerge = false
+                for (j = app.rows - 1; j >= 0; j--) {
                     if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i, j).number == numberAt(
+                            if (numberAt(i, j).number === numberAt(
                                         i, app.rows - filled).number) {
                                 canMerge = false
                                 filled--
@@ -442,15 +442,14 @@ Rectangle {
                     }
                 }
             }
-        }
-        if (row < 0) {
-            for (var i = 0; i < app.cols; i++) {
-                var filled = 0
-                var canMerge = false
-                for (var j = 0; j < app.rows; j++) {
+        } else if (row < 0) {
+            for (i = 0; i < app.cols; i++) {
+                filled = 0
+                canMerge = false
+                for (j = 0; j < app.rows; j++) {
                     if (numberAt(i, j)) {
                         if (canMerge) {
-                            if (numberAt(i, j).number == numberAt(
+                            if (numberAt(i, j).number === numberAt(
                                         i, filled - 1).number) {
                                 canMerge = false
                                 filled--
@@ -472,22 +471,5 @@ Rectangle {
     }
     Component.onCompleted: {
         app.purge()
-    }
-    Keys.onPressed: {
-        if (!message.visible) {
-            if (event.key == Qt.Key_Left)
-                app.move(-1, 0)
-            if (event.key == Qt.Key_Right)
-                app.move(1, 0)
-            if (event.key == Qt.Key_Up)
-                app.move(0, -1)
-            if (event.key == Qt.Key_Down)
-                app.move(0, 1)
-        }
-        if ((event.key === Qt.Key_Down) & (message.visible)) {
-            //event.key === Qt.Key_Space
-            app.purge()
-            message.hide()
-        }
     }
 }
